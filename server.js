@@ -1,33 +1,14 @@
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import dataRoutes from './routes/dataRoutes.js';
-import { errorHandler } from './middleware/errorHandler.js';
-import { setupBot } from './services/botService.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const express = require('express');
+const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.static(path.join(__dirname, '../public')));
-app.use(express.json());
+// JSON dosyalarına erişim sağlamak için public/gonder yolunu statik hale getirelim
+app.use('/public/gonder', express.static(path.join(__dirname, 'public/gonder')));
 
-// Routes
-app.use('/api', dataRoutes);
+// JSON dosyaları için public/data yolunu da statik hale getirelim
+app.use('/public/data', express.static(path.join(__dirname, 'public/data')));
 
-// Error handling
-app.use(errorHandler);
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Sunucu başlatma
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });
-
-// Initialize bot if token is available
-const bot = setupBot();
-if (bot) {
-    bot.launch().catch(error => {
-        console.error('Failed to launch bot:', error);
-    });
-}

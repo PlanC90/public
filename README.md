@@ -1,6 +1,6 @@
 # MemeX Airdrop Bot
 
-Telegram tabanlı XEP token airdrop dağıtım botu ve yönetim paneli.
+Telegram tabanlı MemeX token airdrop dağıtım botu ve yönetim paneli.
 
 ## Özellikler
 
@@ -13,11 +13,6 @@ Telegram tabanlı XEP token airdrop dağıtım botu ve yönetim paneli.
 
 ## Kurulum
 
-1. Repoyu klonlayın:
-```bash
-git clone https://github.com/kullaniciadi/memex-bot.git
-cd memex-bot
-```
 
 2. Bağımlılıkları yükleyin:
 ```bash
@@ -51,3 +46,5 @@ npm start
 ## Lisans
 
 MIT
+
+Dahafazlası için : https://t.me/PlancSpace
