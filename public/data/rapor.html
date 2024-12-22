@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemeX😊 Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Existing styles remain unchanged */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MemeX😊 Dashboard</h1>
+        <div class="dashboard">
+            <div class="content">
+                <div class="chart-container">
+                    <canvas id="user-activity-chart"></canvas>
+                </div>
+
+                <div class="summary-cards">
+                    <div class="card">
+                        <i class="fas fa-users"></i>
+                        <h3 id="total-users">0</h3>
+                        <p>Kullanıcı Sayısı</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-wallet"></i>
+                        <h3 id="total-balance">0</h3>
+                        <p>Toplam Bakiye</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-tasks"></i>
+                        <h3 id="average-tasks">0</h3>
+                        <p>Ortalama Yapılan Görev</p>
+                    </div>
+                </div>
+
+                <div class="filter-container">
+                    <select id="items-per-page" onchange="changePageSize()">
+                        <option value="25">25 Göster</option>
+                        <option value="50">50 Göster</option>
+                        <option value="100">100 Göster</option>
+                        <option value="all">Tümü Göster</option>
+                    </select>
+                </div>
+
+                <table id="user-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Kullanıcı Adı</th>
+                            <th>Bakiye</th>
+                            <th>Tamamlanan Görevler</th>
+                            <th>Son Giriş</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <a href="#" id="prev-page" class="disabled" onclick="changePage(-1)">Önceki</a>
+                    <span id="page-number">1</span>
+                    <a href="#" id="next-page" onclick="changePage(1)">Sonraki</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let users = [];
+        let pageSize = 25;
+        let currentPage = 1;
+
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/users');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                users = await response.json();
+                renderTable();
+                renderSummary();
+                renderChart();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Veri yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.');
+            }
+        }
+
+        // Existing functions remain unchanged
+        function renderSummary() {
+            const totalUsers = users.length;
+            const totalBalance = users.reduce((sum, user) => sum + user.balance, 0);
+            const totalTasks = users.reduce((sum, user) => sum + user.tasks_completed.length, 0);
+            const averageTasks = totalUsers > 0 ? (totalTasks / totalUsers).toFixed(2) : 0;
+
+            document.getElementById("total-users").textContent = totalUsers;
+            document.getElementById("total-balance").textContent = totalBalance.toLocaleString();
+            document.getElementById("average-tasks").textContent = averageTasks;
+        }
+
+        function renderTable() {
+            const tableBody = document.getElementById("user-table-body");
+            tableBody.innerHTML = '';
+
+            const start = (currentPage - 1) * pageSize;
+            const end = pageSize === 'all' ? users.length : start + pageSize;
+
+            users.slice(start, end).forEach((user, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${start + index + 1}</td>
+                    <td>${user.username}</td>
+                    <td>${user.balance.toLocaleString()}</td>
+                    <td class="centered">${user.tasks_completed.length}</td>
+                    <td>${new Date(user.last_login).toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            updatePagination();
+        }
+
+        // Initialize data fetch when page loads
+        document.addEventListener("DOMContentLoaded", fetchData);
+    </script>
+</body>
+</html>
