@@ -1,37 +1,28 @@
-import { dbAsync } from '../config.js';
+import { db } from '../config.js';
 
 export const UserModel = {
   async findByUsername(username) {
-    return await dbAsync.get(
-      'SELECT * FROM users WHERE username = ?',
-      [username]
-    );
+    return await db.findUser(username);
   },
 
   async create(userData) {
-    return await dbAsync.run(
-      `INSERT INTO users (username, balance, tasks_completed, last_login)
-       VALUES (?, ?, ?, ?)`,
-      [
-        userData.username,
-        userData.balance || 500000,
-        JSON.stringify([]),
-        new Date().toISOString()
-      ]
-    );
+    const users = await db.readJsonFile('users.json');
+    const newUser = {
+      username: userData.username,
+      balance: userData.balance || 500000,
+      tasks_completed: [],
+      last_login: new Date().toISOString()
+    };
+    users.push(newUser);
+    await db.writeJsonFile('users.json', users);
+    return newUser;
   },
 
   async updateBalance(username, balance) {
-    return await dbAsync.run(
-      'UPDATE users SET balance = ? WHERE username = ?',
-      [balance, username]
-    );
+    return await db.updateUser(username, { balance });
   },
 
   async updateTasks(username, tasks) {
-    return await dbAsync.run(
-      'UPDATE users SET tasks_completed = ? WHERE username = ?',
-      [JSON.stringify(tasks), username]
-    );
+    return await db.updateUser(username, { tasks_completed: tasks });
   }
 };

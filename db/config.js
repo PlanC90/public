@@ -1,44 +1,21 @@
 import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs/promises';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dbPath = path.join(__dirname, 'database.sqlite');
 
-export const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Database bağlantı hatası:', err);
-  } else {
-    console.log('Database bağlantısı başarılı');
-  }
-});
-
-// Promise wrapper
-export const dbAsync = {
-  run(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      db.run(sql, params, function(err) {
-        if (err) reject(err);
-        else resolve(this);
-      });
-    });
-  },
+export async function getDb() {
+  const db = await open({
+    filename: dbPath,
+    driver: sqlite3.Database
+  });
   
-  get(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      db.get(sql, params, (err, result) => {
-        if (err) reject(err);
-        else resolve(result);
-      });
-    });
-  },
+  // Run migrations
+  const migration = await fs.readFile(path.join(__dirname, 'migrations/init.sql'), 'utf-8');
+  await db.exec(migration);
   
-  all(sql, params = []) {
-    return new Promise((resolve, reject) => {
-      db.all(sql, params, (err, rows) => {
-        if (err) reject(err);
-        else resolve(rows);
-      });
-    });
-  }
-};
+  return db;
+}
