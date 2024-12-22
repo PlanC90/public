@@ -1,30 +1,14 @@
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { setupRoutes } from './src/routes/index.js';
-import { errorHandler } from './src/middleware/errorHandler.js';
-
-// Initialize environment variables
-dotenv.config();
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const express = require('express');
+const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+// JSON dosyalarına erişim sağlamak için public/gonder yolunu statik hale getirelim
+app.use('/public/gonder', express.static(path.join(__dirname, 'public/gonder')));
 
-// Setup routes
-setupRoutes(app);
+// JSON dosyaları için public/data yolunu da statik hale getirelim
+app.use('/public/data', express.static(path.join(__dirname, 'public/data')));
 
-// Error handling
-app.use(errorHandler);
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Sunucu başlatma
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });
