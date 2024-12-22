@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veritabanı Test Arayüzü</title>
+    <style>
+        /* Mevcut stiller korundu */
+        .db-status {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .db-status.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .db-status.error {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Veritabanı durum göstergesi -->
+    <div id="dbStatus" class="db-status">Veritabanı bağlantısı kontrol ediliyor...</div>
+
+    <h1>Veritabanı Test Arayüzü</h1>
+    
+    <!-- Mevcut içerik korundu -->
+
+    <script>
+        // Veritabanı bağlantı kontrolü
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                const statusDiv = document.getElementById('dbStatus');
+                if (data.success) {
+                    statusDiv.className = 'db-status success';
+                    statusDiv.innerHTML = '🟢 Veritabanı bağlantısı başarılı';
+                } else {
+                    statusDiv.className = 'db-status error';
+                    statusDiv.innerHTML = '🔴 Veritabanı bağlantı hatası';
+                }
+            } catch (error) {
+                const statusDiv = document.getElementById('dbStatus');
+                statusDiv.className = 'db-status error';
+                statusDiv.innerHTML = '🔴 Veritabanı bağlantı hatası: ' + error.message;
+            }
+        }
+
+        // Sayfa yüklendiğinde bağlantıyı kontrol et
+        document.addEventListener('DOMContentLoaded', checkDatabaseConnection);
+        
+        // Her 30 saniyede bir bağlantıyı kontrol et
+        setInterval(checkDatabaseConnection, 30000);
+
+        // Mevcut JavaScript kodları korundu
+    </script>
+</body>
+</html>
