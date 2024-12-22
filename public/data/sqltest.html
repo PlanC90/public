@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veritabanı Test Arayüzü</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .db-status {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1000;
+            font-size: 16px;
+        }
+
+        .db-status.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .db-status.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 60px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background-color: #f5f5f5;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: #f44336;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="dbStatus" class="db-status">Veritabanı bağlantısı kontrol ediliyor...</div>
+
+    <div class="container">
+        <h1>Veritabanı Test Arayüzü</h1>
+
+        <!-- Kullanıcılar Bölümü -->
+        <div class="section">
+            <h2>Kullanıcılar</h2>
+            <button class="button" onclick="loadUsers()">Kullanıcıları Getir</button>
+            <div id="usersTable"></div>
+        </div>
+
+        <!-- Çekimler Bölümü -->
+        <div class="section">
+            <h2>Çekimler</h2>
+            <button class="button" onclick="loadWithdrawals()">Çekimleri Getir</button>
+            <div id="withdrawalsTable"></div>
+        </div>
+    </div>
+
+    <script>
+        // Veritabanı bağlantı kontrolü
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                const statusDiv = document.getElementById('dbStatus');
+                if (data.success) {
+                    statusDiv.className = 'db-status success';
+                    statusDiv.innerHTML = '🟢 Veritabanı bağlantısı başarılı';
+                } else {
+                    statusDiv.className = 'db-status error';
+                    statusDiv.innerHTML = '🔴 Veritabanı bağlantı hatası: ' + data.error;
+                }
+            } catch (error) {
+                const statusDiv = document.getElementById('dbStatus');
+                statusDiv.className = 'db-status error';
+                statusDiv.innerHTML = '🔴 Veritabanı bağlantı hatası: ' + error.message;
+            }
+        }
+
+        // Kullanıcıları getir
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const table = createTable(data.data, [
+                        'username', 'balance', 'tasks_completed', 
+                        'referral_earnings', 'total_referrals', 'last_login'
+                    ]);
+                    document.getElementById('usersTable').innerHTML = table;
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById('usersTable').innerHTML = 
+                    `<p class="error-message">Hata: ${error.message}</p>`;
+            }
+        }
+
+        // Çekimleri getir
+        async function loadWithdrawals() {
+            try {
+                const response = await fetch('/api/withdrawals');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const table = createTable(data.data, [
+                        'username', 'wallet_address', 'amount', 'timestamp'
+                    ]);
+                    document.getElementById('withdrawalsTable').innerHTML = table;
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById('withdrawalsTable').innerHTML = 
+                    `<p class="error-message">Hata: ${error.message}</p>`;
+            }
+        }
+
+        // Tablo oluştur
+        function createTable(data, columns) {
+            if (!data || data.length === 0) {
+                return '<p>Veri bulunamadı</p>';
+            }
+
+            let table = '<table class="data-table"><thead><tr>';
+            
+            // Başlıklar
+            columns.forEach(column => {
+                table += `<th>${formatColumnName(column)}</th>`;
+            });
+            table += '</tr></thead><tbody>';
+            
+            // Veriler
+            data.forEach(item => {
+                table += '<tr>';
+                columns.forEach(column => {
+                    let value = item[column];
+                    if (typeof value === 'object') {
+                        value = JSON.stringify(value);
+                    }
+                    table += `<td>${value}</td>`;
+                });
+                table += '</tr>';
+            });
+            
+            table += '</tbody></table>';
+            return table;
+        }
+
+        // Kolon adlarını formatla
+        function formatColumnName(name) {
+            return name
+                .split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        // Sayfa yüklendiğinde bağlantıyı kontrol et
+        document.addEventListener('DOMContentLoaded', () => {
+            checkDatabaseConnection();
+            loadUsers();
+            loadWithdrawals();
+        });
+        
+        // Her 30 saniyede bir bağlantıyı kontrol et
+        setInterval(checkDatabaseConnection, 30000);
+    </script>
+</body>
+</html>
