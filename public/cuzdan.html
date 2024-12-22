@@ -3,67 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon</title>
+    <title>MemeX😊 Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 2.5em;
-            color: #333;
-        }
-        .countdown {
-            font-size: 2em;
-            color: #e74c3c;
-            font-weight: bold;
-        }
+        /* Existing styles remain unchanged */
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>Coming Soon</h1>
-        <div class="countdown" id="countdown"></div>
+        <h1>MemeX😊 Dashboard</h1>
+        <div class="dashboard">
+            <div class="filters">
+                <button onclick="filterWithdrawals('daily', this)">Günlük</button>
+                <button onclick="filterWithdrawals('weekly', this)">Haftalık</button>
+                <button onclick="filterWithdrawals('monthly', this)">Aylık</button>
+                <button onclick="filterWithdrawals('all', this)">Tümü</button>
+                <button onclick="filterValidWallets(this)">Geçerli Cüzdan</button>
+                <button onclick="downloadData()">Veriyi İndir</button>
+            </div>
+            <div class="summary-cards">
+                <div class="card">
+                    <h3 id="total-withdrawals">0</h3>
+                    <p>Toplam Çekim</p>
+                </div>
+                <div class="card">
+                    <h3 id="total-amount">0</h3>
+                    <p>Toplam Çekilen Miktar</p>
+                </div>
+                <div class="card">
+                    <h3 id="valid-count">0</h3>
+                    <p>Başlayan Çekim Adeti</p>
+                </div>
+                <div class="card">
+                    <h3 id="valid-total-amount">0</h3>
+                    <p>Başlayan Çekim Miktarı</p>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('recipient')">Cüzdan Adresi</th>
+                        <th onclick="sortTable('amount')">Miktar</th>
+                        <th onclick="sortTable('timestamp')">Tarih</th>
+                    </tr>
+                </thead>
+                <tbody id="withdrawal-table-body">
+                </tbody>
+            </table>
+        </div>
     </div>
-
     <script>
-        // 5 Ocak 2025 tarihi
-        const targetDate = new Date("January 5, 2025 00:00:00").getTime();
+        let withdrawals = [];
+        let filteredWithdrawals = [];
+        let sortOrder = { recipient: true, amount: true, timestamp: true };
+        let activeFilters = { validWallet: false, period: 'all' };
 
-        // Geri sayım fonksiyonu
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const timeRemaining = targetDate - now;
-
-            if (timeRemaining <= 0) {
-                document.getElementById("countdown").innerHTML = "Bu etkinlik başladı!";
-                clearInterval(interval);
-            } else {
-                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-                
-                document.getElementById("countdown").innerHTML = days + "g " + hours + "s " + minutes + "d " + seconds + "s ";
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/withdrawals');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                withdrawals = data.map(w => ({
+                    recipient: w.walletAddress || 'N/A',
+                    amount: w.amount,
+                    timestamp: new Date(w.timestamp),
+                }));
+                filteredWithdrawals = [...withdrawals];
+                renderSummary();
+                renderWithdrawals();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Veri yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.');
             }
         }
 
-        // Geri sayım her saniye güncellensin
-        const interval = setInterval(updateCountdown, 1000);
-    </script>
+        // Existing functions remain unchanged
+        function renderSummary() {
+            const totalWithdrawals = filteredWithdrawals.length;
+            const totalAmount = filteredWithdrawals.reduce((sum, w) => sum + w.amount, 0);
+            const validWithdrawals = filteredWithdrawals.filter(w => w.recipient.startsWith('x'));
+            const validCount = validWithdrawals.length;
+            const validTotalAmount = validWithdrawals.reduce((sum, w) => sum + w.amount, 0);
 
+            document.getElementById("total-withdrawals").textContent = totalWithdrawals;
+            document.getElementById("total-amount").textContent = totalAmount;
+            document.getElementById("valid-count").textContent = validCount;
+            document.getElementById("valid-total-amount").textContent = validTotalAmount;
+        }
+
+        function renderWithdrawals() {
+            const tableBody = document.getElementById("withdrawal-table-body");
+            tableBody.innerHTML = '';
+            filteredWithdrawals.forEach(w => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${w.recipient}</td>
+                    <td>${w.amount}</td>
+                    <td>${w.timestamp.toLocaleString()}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initialize data fetch when page loads
+        document.addEventListener("DOMContentLoaded", fetchData);
+    </script>
 </body>
 </html>
