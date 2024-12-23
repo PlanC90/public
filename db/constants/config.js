@@ -1,0 +1,3 @@
+export const DEFAULT_BALANCE = 500000;
+export const REFERRAL_REWARD = 10000;
+export const WITHDRAWAL_MIN = 100000;
