@@ -1,0 +1,25 @@
+{
+  "name": "xepmeme-game",
+  "version": "1.0.0",
+  "description": "XepMeme game bot and web interface",
+  "main": "server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=14.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "migrate": "node db/migrations/run.js",
+    "migrate:json": "node db/migrations/migrateJsonToSql.js",
+    "setup": "node setup.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5", 
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.11.3",
+    "telegraf": "^4.16.3"
+  }
+}
