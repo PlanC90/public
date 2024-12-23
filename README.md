@@ -11,39 +11,23 @@ Telegram tabanlı XEP token airdrop dağıtım botu ve yönetim paneli.
 - SQLite veritabanı
 - Admin paneli
 
-## 📋 Kurulum Adımları
+## 📋 Replit Kurulum Adımları
 
-### GitHub'dan Glitch'e Aktarma
+1. Replit'te yeni bir proje oluşturun:
+   - "Create Repl" > "Import from GitHub"
+   - Repository URL: `https://github.com/PlanC90/public.git`
+   - Language: Node.js
 
-1. Bu repoyu GitHub'a yükleyin:
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/KULLANICI_ADI/REPO_ADI.git
-git push -u origin main
-```
-
-2. Glitch'te yeni proje oluşturun:
-   - "New Project" > "Import from GitHub"
-   - Repo URL'sini yapıştırın
-
-### Glitch Kurulum
-
-1. `.env` dosyasını oluşturun:
+2. `.env` dosyasını oluşturun:
 ```env
 BOT_TOKEN=your_telegram_bot_token
 BOT_USERNAME=your_bot_username 
 PORT=3000
 ```
 
-2. Terminal'de sırasıyla çalıştırın:
+3. Shell'de sırasıyla çalıştırın:
 
 ```bash
-# SQLite3 kur
-npm install sqlite3
-
 # Bağımlılıkları yükle
 npm install
 

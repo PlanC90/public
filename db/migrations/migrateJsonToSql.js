@@ -1,6 +1,9 @@
-const fs = require('fs').promises;
-const path = require('path');
-const { getDb } = require('../config');
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dbAsync } from '../config.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function readJsonFile(filePath) {
     try {
@@ -13,17 +16,16 @@ async function readJsonFile(filePath) {
 }
 
 async function migrateData() {
-    const db = await getDb();
     const dataDir = path.join(__dirname, '../../public/data');
     
     try {
-        // Başla transaction
-        await db.run('BEGIN TRANSACTION');
+        // Start transaction
+        await dbAsync.run('BEGIN TRANSACTION');
 
-        console.log('Kullanıcı verilerini aktarma başladı...');
+        console.log('Migrating user data...');
         const users = await readJsonFile(path.join(dataDir, 'users.json'));
         for (const user of users) {
-            await db.run(
+            await dbAsync.run(
                 `INSERT OR IGNORE INTO users (
                     username, balance, tasks_completed, referral_earnings,
                     total_referrals, last_login
@@ -38,12 +40,12 @@ async function migrateData() {
                 ]
             );
         }
-        console.log(`${users.length} kullanıcı aktarıldı`);
+        console.log(`${users.length} users migrated`);
 
-        console.log('Çekim verilerini aktarma başladı...');
+        console.log('Migrating withdrawal data...');
         const withdrawals = await readJsonFile(path.join(dataDir, 'withdrawals.json'));
         for (const withdrawal of withdrawals) {
-            await db.run(
+            await dbAsync.run(
                 `INSERT OR IGNORE INTO withdrawals (
                     username, wallet_address, amount, timestamp
                 ) VALUES (?, ?, ?, ?)`,
@@ -55,13 +57,13 @@ async function migrateData() {
                 ]
             );
         }
-        console.log(`${withdrawals.length} çekim aktarıldı`);
+        console.log(`${withdrawals.length} withdrawals migrated`);
 
-        // Transaction'ı tamamla
-        await db.run('COMMIT');
-        console.log('Veritabanı aktarımı başarılı!');
+        // Commit transaction
+        await dbAsync.run('COMMIT');
+        console.log('Database migration successful!');
 
-        // JSON dosyalarını yedekle ve sil
+        // Backup and remove JSON files
         const backupDir = path.join(dataDir, 'backup');
         await fs.mkdir(backupDir, { recursive: true });
 
@@ -70,21 +72,16 @@ async function migrateData() {
             const sourcePath = path.join(dataDir, file);
             const backupPath = path.join(backupDir, `${file}.bak`);
             
-            // Dosyayı yedekle
             await fs.copyFile(sourcePath, backupPath);
-            // Orijinal dosyayı sil
             await fs.unlink(sourcePath);
-            console.log(`${file} yedeklendi ve silindi`);
+            console.log(`${file} backed up and removed`);
         }
 
-        console.log('Tüm işlemler başarıyla tamamlandı!');
+        console.log('All operations completed successfully!');
 
     } catch (error) {
-        await db.run('ROLLBACK');
-        console.error('Migrasyon hatası:', error);
+        await dbAsync.run('ROLLBACK');
+        console.error('Migration error:', error);
         throw error;
     }
 }
-
-// Migrasyon'u çalıştır
-migrateData().catch(console.error);

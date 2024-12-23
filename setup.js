@@ -4,39 +4,49 @@ import { ensureDirectoryExists, createFileIfNotExists } from './db/utils/fileSys
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const REQUIRED_DIRS = [
+    'db',
+    'db/migrations',
+    'public/data'
+];
+
+const ENV_TEMPLATE = `# Bot Configuration
+BOT_TOKEN=your_telegram_bot_token
+BOT_USERNAME=your_bot_username
+
+# Server Configuration
+PORT=3000
+`;
+
+const INITIAL_JSON_FILES = {
+    'users.json': '[]',
+    'withdrawals.json': '[]',
+    'referrals.json': '[]'
+};
+
 async function setup() {
     console.log('Starting setup...');
 
     try {
         // Create required directories
-        const directories = [
-            'db',
-            'db/migrations',
-            'public/data'
-        ];
-
-        for (const dir of directories) {
+        for (const dir of REQUIRED_DIRS) {
             await ensureDirectoryExists(path.join(__dirname, dir));
         }
 
-        // Create .env if not exists
-        const envContent = `# Bot Configuration
-BOT_TOKEN=your_telegram_bot_token
-BOT_USERNAME=your_bot_username
-
-# Server Configuration
-PORT=3000`;
-        await createFileIfNotExists(path.join(__dirname, '.env'), envContent);
-
-        // Create initial migration file
-        const migrationContent = await fs.readFile(
-            path.join(__dirname, 'db/migrations/init.sql'),
-            'utf-8'
-        );
+        // Create .env file if not exists
         await createFileIfNotExists(
-            path.join(__dirname, 'db/migrations/init.sql'),
-            migrationContent
+            path.join(__dirname, '.env'),
+            ENV_TEMPLATE
         );
+
+        // Create initial JSON files
+        const dataDir = path.join(__dirname, 'public/data');
+        for (const [filename, content] of Object.entries(INITIAL_JSON_FILES)) {
+            await createFileIfNotExists(
+                path.join(dataDir, filename),
+                content
+            );
+        }
 
         console.log('\nSetup completed successfully!');
         console.log('\nNext steps:');

@@ -5,17 +5,18 @@
   "main": "server.js",
   "type": "module",
   "engines": {
-    "node": "14.x"
+    "node": ">=14.x"
   },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
     "migrate": "node db/migrations/run.js",
+    "migrate:json": "node db/migrations/migrateJsonToSql.js",
     "setup": "node setup.js"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
+    "cors": "^2.8.5", 
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "sqlite3": "^5.1.7",
