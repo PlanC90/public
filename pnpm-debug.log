@@ -1,0 +1,52 @@
+---
+  0 debug pnpm:scope: 
+    selected: 1
+    workspacePrefix: null
+  1 info pnpm: 
+    message: "A store server is running. All store manipulations are delegated to it."
+    prefix: "/app"
+  2 debug pnpm:package-json: 
+    initial: 
+      name: "memex-telegram-webapp"
+      version: "1.0.0"
+      description: "MEMEX Telegram Web App"
+      main: "src/server.js"
+      scripts: 
+        start: "node src/server.js"
+        dev: "nodemon src/server.js"
+        test: "vitest"
+      dependencies: 
+        dotenv: "^16.0.3"
+        express: "^4.17.1"
+        mysql2: "^2.3.3"
+        nodemon: "^2.0.22"
+        telegraf: "^3.38.0"
+        express-rate-limit: "^5.5.1"
+        helmet: "^4.6.0"
+        cors: "^2.8.5"
+        compression: "^1.7.4"
+        express-validator: "^6.14.0"
+        sequelize: "^6.11.0"
+      devDependencies: 
+        vitest: "^0.34.6"
+      engines: 
+        node: ">=10.0.0"
+      gitHead: "9510b7b1ab3c899d7dd9073ec614da68fd56cd4f"
+      readme: "ERROR: No README data found!"
+      _id: "memex-telegram-webapp@1.0.0"
+    prefix: "/app"
+  3 warn pnpm: 
+    message: "Moving vitest that was installed by a different package manager to \"node_modules/.ignored"
+    prefix: "/app"
+  4 error pnpm: 
+    message: 
+      errno: -39
+      code: "ENOTEMPTY"
+      syscall: "rename"
+      path: "/rbd/pnpm-volume/41b9d177-2df3-49bd-8ecc-057b6d9aa045/node_modules/vitest"
+      dest: "/rbd/pnpm-volume/41b9d177-2df3-49bd-8ecc-057b6d9aa045/node_modules/.ignored/vitest"
+    err: 
+      name: "Error"
+      message: "ENOTEMPTY: directory not empty, rename '/rbd/pnpm-volume/41b9d177-2df3-49bd-8ecc-057b6d9aa045/node_modules/vitest' -> '/rbd/pnpm-volume/41b9d177-2df3-49bd-8ecc-057b6d9aa045/node_modules/.ignored/vitest'"
+      code: "ENOTEMPTY"
+      stack: "Error: ENOTEMPTY: directory not empty, rename '/rbd/pnpm-volume/41b9d177-2df3-49bd-8ecc-057b6d9aa045/node_modules/vitest' -> '/rbd/pnpm-volume/41b9d177-2df3-49bd-8ecc-057b6d9aa045/node_modules/.ignored/vitest'"
