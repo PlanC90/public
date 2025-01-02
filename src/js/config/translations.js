@@ -1,4 +1,5 @@
-{
+// Move translations to a local config file to avoid fetch errors
+export const translations = {
   "en": {
     "title": "🚀 MemeX Token Airdrop",
     "claimButtonText": "🎁 Claim 2,000,000 MemeX Tokens",

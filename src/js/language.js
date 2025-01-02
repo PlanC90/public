@@ -1,51 +1,76 @@
-export async function setupLanguageSelector() {
-  try {
-    const response = await fetch('/translations.json');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    
-    const languageSelector = document.getElementById('languageSelector');
-    
-    // Populate language options
-    for (const lang in data) {
-      const option = document.createElement('option');
-      option.value = lang;
-      option.textContent = lang.toUpperCase();
-      languageSelector.appendChild(option);
-    }
+import { 
+  AVAILABLE_LANGUAGES, 
+  getLanguagePreference, 
+  saveLanguagePreference 
+} from './utils/languageUtils.js';
+import { translations } from './config/translations.js';
 
-    // Set default language
-    let selectedLanguage = 'en';
-    
-    // Update UI with selected language
-    function updateLanguage(lang) {
-      const langData = data[lang];
-      if (!langData) return;
-      
-      document.getElementById('pageTitle').textContent = langData.title;
-      document.getElementById('claimButton').textContent = langData.claimButtonText;
-      document.getElementById('telegramButton').textContent = langData.telegramButtonText;
-      document.getElementById('walletLabel').textContent = langData.walletLabel;
-      document.getElementById('walletError').textContent = langData.walletError;
-      document.getElementById('telegramText').innerHTML = langData.telegramText;
-      document.getElementById('downloadButton').textContent = langData.downloadButtonText;
-      document.getElementById('fastestToken').textContent = langData.fastestToken;
-    }
+export function setupLanguageSelector() {
+  const languageSelector = document.getElementById('languageSelector');
+  
+  // Populate language options
+  Object.entries(AVAILABLE_LANGUAGES).forEach(([code, name]) => {
+    const option = document.createElement('option');
+    option.value = code;
+    option.textContent = name;
+    languageSelector.appendChild(option);
+  });
 
-    // Add language change listener
-    languageSelector.addEventListener('change', (e) => {
-      selectedLanguage = e.target.value;
-      updateLanguage(selectedLanguage);
+  // Set initial language
+  const savedLanguage = getLanguagePreference();
+  languageSelector.value = savedLanguage;
+  
+  function updateLanguage(lang) {
+    const langData = translations[lang];
+    if (!langData) return;
+    
+    const elements = {
+      pageTitle: 'title',
+      claimButton: 'claimButtonText',
+      telegramButton: 'telegramButtonText',
+      walletLabel: 'walletLabel',
+      walletError: 'walletError',
+      telegramText: 'telegramText',
+      downloadButton: 'downloadButtonText',
+      countdownText: 'countdownText',
+      fastestToken: 'fastestToken',
+      electraProtocol: 'electraProtocol',
+      moreMemeX: 'moreMemeX'
+    };
+
+    // Update all elements with translations
+    Object.entries(elements).forEach(([elementId, translationKey]) => {
+      const element = document.getElementById(elementId);
+      if (element) {
+        if (translationKey === 'telegramText' || translationKey === 'electraProtocol' || translationKey === 'moreMemeX') {
+          element.innerHTML = langData[translationKey];
+        } else if (translationKey === 'countdownText') {
+          const text = langData[translationKey];
+          if (text) {
+            element.textContent = text.replace("{countdown}", "30 days");
+          }
+        } else {
+          element.textContent = langData[translationKey];
+        }
+      }
     });
 
-    // Initial language update
-    updateLanguage(selectedLanguage);
-    
-    return { updateLanguage };
-  } catch (error) {
-    console.error('Error loading translations:', error);
-    throw error;
+    // Update links
+    const electraProtocol = document.querySelector('#electraProtocol a');
+    const moreMemeX = document.querySelector('#moreMemeX a');
+    if (electraProtocol) electraProtocol.href = langData.electraLink;
+    if (moreMemeX) moreMemeX.href = langData.moreMemeXLink;
   }
+
+  // Add language change listener
+  languageSelector.addEventListener('change', (e) => {
+    const newLang = e.target.value;
+    saveLanguagePreference(newLang);
+    updateLanguage(newLang);
+  });
+
+  // Initial language update
+  updateLanguage(savedLanguage);
+  
+  return { updateLanguage };
 }

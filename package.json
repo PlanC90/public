@@ -4,6 +4,7 @@
   "description": "MemeX Token Airdrop Landing Page",
   "type": "module",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -11,5 +12,8 @@
   "dependencies": {},
   "devDependencies": {
     "vite": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -1,35 +1,32 @@
 # MemeX Token Airdrop 🚀
 
-A multilingual airdrop platform for MemeX tokens built with modern web technologies.
+A multilingual airdrop platform for MemeX tokens with support for English, Turkish, Spanish, Chinese, and French.
 
 ## Features ✨
 
-- Multi-language support (English, Turkish, Spanish, Chinese, French)
+- Multi-language support (EN, TR, ES, ZH, FR)
 - Wallet address validation
 - Countdown timer for token distribution
 - Responsive design
 - Social media integration
-- Wallet download options for different platforms
+- Cross-platform wallet download options
 
-## Technologies Used 🛠
+## Live Demo 🌐
 
-- HTML5
-- Tailwind CSS
-- JavaScript (ES6+)
-- Vite.js
+Visit the live demo at: [https://your-glitch-project.glitch.me](https://your-glitch-project.glitch.me)
 
-## Getting Started 🚀
+## Development 🛠
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v18 or higher)
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/planc90/memex-token-airdrop.git
+git clone https://github.com/yourusername/memex-token-airdrop.git
 ```
 
 2. Install dependencies:
@@ -39,48 +36,41 @@ npm install
 
 3. Start the development server:
 ```bash
-npm run dev
+npm start
 ```
 
-### Deployment on Glitch 🌐
+## Deployment on Glitch 🚀
 
 1. Create a new project on Glitch
 2. Import your GitHub repository
 3. The project will automatically build and deploy
+4. Access your site at: `https://project-name.glitch.me`
 
 ## Project Structure 📁
 
 ```
 memex-token-airdrop/
 ├── public/
+│   ├── index.html
 │   └── translations.json
 ├── src/
-│   ├── js/
-│   │   ├── features/
-│   │   ├── utils/
-│   │   ├── buttons.js
-│   │   ├── countdown.js
-│   │   ├── language.js
-│   │   ├── main.js
-│   │   └── wallet.js
-│   └── index.html
-├── package.json
-└── vite.config.js
+│   └── js/
+│       ├── features/
+│       ├── utils/
+│       └── main.js
+├── images/
+│   └── gorsel.jpg
+└── package.json
 ```
 
 ## Contributing 🤝
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
 5. Open a Pull Request
 
 ## License 📝
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments 🙏
-
-- Electraprotocol for the wallet infrastructure
-- The MemeX community for their support
+This project is licensed under the MIT License.
