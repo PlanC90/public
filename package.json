@@ -1,0 +1,15 @@
+{
+  "name": "memex-token-airdrop",
+  "version": "1.0.0",
+  "description": "MemeX Token Airdrop Landing Page",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
