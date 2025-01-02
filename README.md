@@ -29,7 +29,7 @@ A multilingual airdrop platform for MemeX tokens built with modern web technolog
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/memex-token-airdrop.git
+git clone https://github.com/planc90/memex-token-airdrop.git
 ```
 
 2. Install dependencies:
