@@ -1,0 +1,22 @@
+{
+  "en": {
+    "title": "🚀 MemeX Token Airdrop",
+    "claimButtonText": "🎁 Claim 2,000,000 MemeX Tokens",
+    "telegramButtonText": "🐦 Follow MemeX on X",
+    "walletLabel": "💼 Wallet Address (must start with x):",
+    "walletError": "❌ Invalid wallet address!",
+    "telegramText": "💫 To claim, you must follow <b>MemeX on X</b>.",
+    "downloadButtonText": "📱 Download Wallet",
+    "fastestToken": "⚡ The fastest and cheapest transfer meme token."
+  },
+  "tr": {
+    "title": "🚀 MemeX Token Dağıtımı",
+    "claimButtonText": "🎁 2.000.000 MemeX Token Talep Et",
+    "telegramButtonText": "🐦 MemeX'i X'te Takip Et",
+    "walletLabel": "💼 Cüzdan Adresi (x ile başlamalı):",
+    "walletError": "❌ Geçersiz cüzdan adresi!",
+    "telegramText": "💫 Çekim yapmak için <b>MemeX'i X'te takip etmelisiniz</b>.",
+    "downloadButtonText": "📱 Cüzdanı İndir",
+    "fastestToken": "⚡ En hızlı ve düşük transfer ücretli meme token."
+  }
+}
