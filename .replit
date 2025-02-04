@@ -1,0 +1,15 @@
+# .replit
+    run = "npm run dev"
+    entrypoint = "index.html"
+    
+    [nix]
+    channel = "stable-23_05"
+    
+    [deployment]
+    run = ["npm", "run", "build"]
+    
+    [[ports]]
+      port = 5173
+    
+    [packager]
+    ignoredPaths = ["node_modules/**", ".git/**"]
