@@ -1,0 +1,27 @@
+.order-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
+    gap: 10px; /* Adjust the gap as needed */
+    padding: 0.5rem;
+    border-bottom: 1px solid #4a5568;
+}
+
+.order-row:last-child {
+    border-bottom: none;
+}
+
+.order-row div {
+    padding: 0.25rem;
+}
+
+.order-row div:nth-child(1) {
+    text-align: left;
+}
+
+.order-row div:nth-child(2) {
+    text-align: right;
+}
+
+.order-row div:nth-child(3) {
+    text-align: center;
+}
