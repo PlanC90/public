@@ -4,21 +4,8 @@ import { Send, Moon, Stars, Cloud, Sparkles } from 'lucide-react';
 function App() {
   const [messages, setMessages] = useState<Array<{ text: string, isUser: boolean }>>([]);
   const [inputText, setInputText] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string>('/gorsel/gorsel.jpg');
   const [isLoading, setIsLoading] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async () => {
     if (!inputText.trim()) return;
@@ -86,15 +73,6 @@ function App() {
 
         {/* Main Content Area - Scrollable */}
         <div className="flex-1 overflow-hidden flex flex-col bg-white rounded-lg shadow-xl">
-          {/* Image Display Area */}
-          <div className="relative w-full" style={{ paddingTop: '40%' }}>
-            <img 
-              src={selectedImage} 
-              alt="Rüya Görseli"
-              className="absolute inset-0 w-full h-full object-contain p-4"
-            />
-          </div>
-
           {/* Chat Messages */}
           <div 
             ref={chatContainerRef}
