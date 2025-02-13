@@ -1,0 +1,17 @@
+{
+  "admins": ["admin1", "admin2"],
+  "rewards": {
+    "linkShare": 1000,
+    "support": 500,
+    "verification": 200
+  },
+  "platforms": [
+    "Twitter",
+    "Facebook",
+    "Instagram",
+    "YouTube",
+    "TikTok",
+    "CoinMarketCap",
+    "Other"
+  ]
+}
