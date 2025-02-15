@@ -10,7 +10,8 @@ This is a React-based web application for managing a Telegram bot. It allows adm
 ## Setup
 
 1.  Import the project to Glitch.
-2.  The application should automatically start.
+2.  Glitch should automatically install the dependencies. If not, open the console and run `npm install`.
+3.  The application should automatically start. If not, run `npm start` in the console.
 
 ## Data Storage
 
