@@ -1,0 +1,10 @@
+{
+  "withdrawals": [
+    {
+      "username": "@johndoe",
+      "amount": 2345,
+      "walletAddress": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+      "timestamp": "2025-02-15T22:23:16.115Z"
+    }
+  ]
+}
